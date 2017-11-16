@@ -1,0 +1,26 @@
+[package]
+authors = ["Sanemat <o.gata.ken@gmail.com>"]
+categories = ["development-tools"]
+description = "My splendid module"
+include = [
+    "src/**/*",
+    "Cargo.toml",
+    "changelog.md",
+    "readme.md",
+    "license-apache",
+    "license-mit",
+]
+keywords = ["checkstyle"]
+license = "MIT/Apache-2.0"
+name = "gitconfig"
+repository = "https://github.com/packsaddle/gitconfig/"
+version = "0.0.1"
+
+[badges.appveyor]
+project_name = "packsaddle/gitconfig"
+repository = "packsaddle/gitconfig"
+
+[badges.travis-ci]
+repository = "packsaddle/gitconfig"
+
+[dependencies]
