@@ -4,7 +4,7 @@
 
 > My splendid module
 
-See [gitconfig_cli](https://github.com/packsaddle/gitconfig_cli) CLI for this module.
+See [gitconfig2json](https://github.com/packsaddle/rust-gitconfig2json) usage for this module.
 
 ## Example
 
@@ -23,10 +23,10 @@ $ cargo install gitconfig
 
 MIT/Apache-2.0 © [Sanemat](sane.jp)
 
-[travis-url]: https://travis-ci.org/packsaddle/gitconfig
-[travis-image]: https://img.shields.io/travis/packsaddle/gitconfig/master.svg?style=flat-square&label=travis
-[appveyor-url]: https://ci.appveyor.com/project/packsaddle/gitconfig/branch/master
-[appveyor-image]: https://img.shields.io/appveyor/ci/packsaddle/gitconfig/master.svg?style=flat-square&label=appveyor
+[travis-url]: https://travis-ci.org/packsaddle/rust-gitconfig
+[travis-image]: https://img.shields.io/travis/packsaddle/rust-gitconfig/master.svg?style=flat-square&label=travis
+[appveyor-url]: https://ci.appveyor.com/project/sanemat/rust-gitconfig/branch/master
+[appveyor-image]: https://img.shields.io/appveyor/ci/sanemat/rust-gitconfig/master.svg?style=flat-square&label=appveyor
 [crates-url]: https://crates.io/crates/gitconfig
 [crates-image]: https://img.shields.io/crates/v/gitconfig.svg?style=flat-square
 [license-image]: https://img.shields.io/crates/l/gitconfig.svg?style=flat-square
