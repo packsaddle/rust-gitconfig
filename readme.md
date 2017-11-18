@@ -2,7 +2,7 @@
 
 [![crates version][crates-image]][crates-url] [![Travis-CI Status][travis-image]][travis-url] [![Appveyor Status][appveyor-image]][appveyor-url] ![license][license-image]
 
-> My splendid module
+> `git config --list --null` to object
 
 See [gitconfig2json](https://github.com/packsaddle/rust-gitconfig2json) usage for this module.
 
