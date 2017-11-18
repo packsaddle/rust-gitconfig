@@ -138,6 +138,187 @@ impl str::FromStr for Value {
     }
 }
 
+#[cfg(test)]
+mod tests {
+    use super::*;
+    #[test]
+    fn parse_empty() {
+        let actual = "";
+        let expected = Value::Object(Map::new());
+        assert_eq!(actual.parse::<Value>().unwrap(), expected);
+    }
+
+    #[test]
+    fn parse_empty2() {
+        let actual = "\n";
+        let expected = Value::Object(Map::new());
+        assert_eq!(actual.parse::<Value>().unwrap(), expected);
+    }
+
+    #[test]
+    fn parse_empty3() {
+        let actual = "\n\n\n\n\n";
+        let expected = Value::Object(Map::new());
+        assert_eq!(actual.parse::<Value>().unwrap(), expected);
+    }
+
+    #[test]
+    fn parse_key_and_empty_value() {
+        let actual = "key\n";
+        let mut internal = Map::new();
+        internal.insert("key".to_owned(), Value::String("".to_owned()));
+        let expected = Value::Object(internal);
+        assert_eq!(actual.parse::<Value>().unwrap(), expected);
+    }
+
+    #[test]
+    fn parse_one_key_and_value() {
+        let actual = "key\nvalue\nvalue";
+        let mut internal = Map::new();
+        internal.insert("key".to_owned(), Value::String("value\nvalue".to_owned()));
+        let expected = Value::Object(internal);
+        assert_eq!(actual.parse::<Value>().unwrap(), expected);
+    }
+
+    #[test]
+    fn parse_2config_key_and_value() {
+        let actual = "key1\nvalue1\nvalue2\0";
+        let mut internal = Map::new();
+        internal.insert(
+            "key1".to_owned(),
+            Value::String("value1\nvalue2".to_owned()),
+        );
+        let expected = Value::Object(internal);
+        assert_eq!(actual.parse::<Value>().unwrap(), expected);
+    }
+
+    //    #[test]
+    //    fn parse_2config_key_and_value2() {
+    //        let actual = "key1\nvalue1\nvalue2\0key2";
+    //        let mut internal = Map::new();
+    //        internal.insert("key1".to_owned(), Value::String("value1\nvalue2".to_owned()));
+    //        let expected = Value::Object(internal);
+    //        assert_eq!(actual.parse::<Value>().unwrap(), expected);
+    //    }
+
+    #[test]
+    fn parse_2config_key_and_value3() {
+        let actual = "key1\nvalue1\nvalue2\0key2\nvalue3";
+        let mut internal = Map::new();
+        internal.insert(
+            "key1".to_owned(),
+            Value::String("value1\nvalue2".to_owned()),
+        );
+        internal.insert("key2".to_owned(), Value::String("value3".to_owned()));
+        let expected = Value::Object(internal);
+        assert_eq!(actual.parse::<Value>().unwrap(), expected);
+    }
+
+    #[test]
+    fn parse_2keys_and_value1() {
+        let actual = "key1.key2\nvalue1\nvalue2";
+        let mut internal = Map::new();
+        let mut internal2 = Map::new();
+        internal2.insert(
+            "key2".to_owned(),
+            Value::String("value1\nvalue2".to_owned()),
+        );
+        internal.insert("key1".to_owned(), Value::Object(internal2));
+        let expected = Value::Object(internal);
+        assert_eq!(actual.parse::<Value>().unwrap(), expected);
+    }
+
+    #[test]
+    fn parse_key_and_value2() {
+        let actual = "key1\nvalue1\nvalue2";
+        let mut internal = Map::new();
+        match internal.entry("key1") {
+            Entry::Occupied(_) => unimplemented!(),
+            Entry::Vacant(vacant) => {
+                vacant.insert(Value::String("value1\nvalue2".to_owned()));
+                ()
+            }
+        }
+        let expected = Value::Object(internal);
+        assert_eq!(actual.parse::<Value>().unwrap(), expected);
+    }
+
+    #[test]
+    fn parse_2keys_and_value2() {
+        let actual = "key1.key2\nvalue1\nvalue2";
+        let mut internal = Map::new();
+        match internal.entry("key1") {
+            Entry::Occupied(_) => unimplemented!(),
+            Entry::Vacant(vacant) => {
+                let mut internal2 = Map::new();
+                internal2.insert(
+                    "key2".to_owned(),
+                    Value::String("value1\nvalue2".to_owned()),
+                );
+                vacant.insert(Value::Object(internal2));
+            }
+        }
+        let expected = Value::Object(internal);
+        assert_eq!(actual.parse::<Value>().unwrap(), expected);
+    }
+
+    #[test]
+    fn parse_3keys_and_value1() {
+        let actual = "key1.key2.key3\nvalue1\nvalue2";
+        let mut internal = Map::new();
+        let mut internal2 = Map::new();
+        let mut internal3 = Map::new();
+        internal3.insert(
+            "key3".to_owned(),
+            Value::String("value1\nvalue2".to_owned()),
+        );
+        internal2.insert("key2".to_owned(), Value::Object((internal3)));
+        internal.insert("key1".to_owned(), Value::Object(internal2));
+        let expected = Value::Object(internal);
+        assert_eq!(actual.parse::<Value>().unwrap(), expected);
+    }
+
+    #[test]
+    fn parse_3keys_and_value2() {
+        let actual = "key1.key2.key3\nvalue1\nvalue2\0key1.key2.key4\nvalue3\nvalue4";
+        let mut internal = Map::new();
+        let mut internal2 = Map::new();
+        let mut internal3 = Map::new();
+        internal3.insert(
+            "key3".to_owned(),
+            Value::String("value1\nvalue2".to_owned()),
+        );
+        internal3.insert(
+            "key4".to_owned(),
+            Value::String("value3\nvalue4".to_owned()),
+        );
+        internal2.insert("key2".to_owned(), Value::Object((internal3)));
+        internal.insert("key1".to_owned(), Value::Object(internal2));
+        let expected = Value::Object(internal);
+        assert_eq!(actual.parse::<Value>().unwrap(), expected);
+    }
+    #[test]
+    fn parse_5keys_and_value2() {
+        let actual = "key1.key2.key3.key4.key5\nvalue1
+value2\0key1.key2.key3.key4.key6\nvalue3\nvalue4";
+        let mut internal = Map::new();
+        let mut internal2 = Map::new();
+        let mut internal3 = Map::new();
+        internal3.insert(
+            "key5".to_owned(),
+            Value::String("value1\nvalue2".to_owned()),
+        );
+        internal3.insert(
+            "key6".to_owned(),
+            Value::String("value3\nvalue4".to_owned()),
+        );
+        internal2.insert("key2.key3.key4".to_owned(), Value::Object((internal3)));
+        internal.insert("key1".to_owned(), Value::Object(internal2));
+        let expected = Value::Object(internal);
+        assert_eq!(actual.parse::<Value>().unwrap(), expected);
+    }
+}
+
 fn split_once(in_string: &str) -> (&str, &str) {
     let mut splitter = in_string.splitn(2, "\n");
     let first = splitter.next().unwrap();
